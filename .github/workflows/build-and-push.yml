@@ -1,0 +1,29 @@
+name: 🚀 Build and Push Vue App to GHCR
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # 수동 실행도 가능
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v3
+
+    - name: 🐙 Log in to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: 🏗️ Build Docker image
+      run: |
+        docker build -t ghcr.io/${{ github.repository_owner }}/vue-pi-test:latest .
+
+    - name: 📤 Push Docker image to GHCR
+      run: |
+        docker push ghcr.io/${{ github.repository_owner }}/vue-pi-test:latest
