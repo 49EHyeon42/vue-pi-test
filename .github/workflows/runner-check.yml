@@ -1,0 +1,17 @@
+name: 🧪 Runner 작동 확인
+
+on:
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  check-runner:
+    runs-on: [self-hosted]  # self-hosted runner에서 실행
+
+    steps:
+    - name: ✅ Runner 정보 확인
+      run: |
+        echo "이 워크플로는 self-hosted runner에서 실행됩니다."
+        echo "호스트 이름: $(hostname)"
+        echo "운영체제: $(uname -a)"
+        echo "현재 디렉토리: $(pwd)"
+        echo "사용자: $(whoami)"
