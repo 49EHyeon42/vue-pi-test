@@ -20,10 +20,16 @@ jobs:
     - name: 🐙 Log in to GitHub Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+    - name: 🏗️ Set lowercase image name
+      id: image
+      run: |
+        OWNER_LC=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+        echo "IMAGE=ghcr.io/$OWNER_LC/vue-pi-test:latest" >> "$GITHUB_ENV"
+
     - name: 🏗️ Build Docker image
       run: |
-        docker build -t ghcr.io/${{ github.repository_owner }}/vue-pi-test:latest .
+        docker build -t $IMAGE .
 
     - name: 📤 Push Docker image to GHCR
       run: |
-        docker push ghcr.io/${{ github.repository_owner }}/vue-pi-test:latest
+        docker push $IMAGE
